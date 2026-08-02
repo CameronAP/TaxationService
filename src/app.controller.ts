@@ -9,6 +9,7 @@ import {
   Post,
   Body,
   InternalServerErrorException,
+  ConflictException,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { plainToInstance } from "class-transformer";
@@ -44,6 +45,8 @@ export class AppController {
       const taxPos = await this.appService.getTaxPosition(new Date(dateString));
       return { date: dateString, taxPosition: taxPos };
     } catch (error) {
+      if (error instanceof ConflictException || error instanceof InternalServerErrorException)
+        throw error;
       console.error(error);
       throw new InternalServerErrorException("Internal Server Error");
     }
@@ -65,6 +68,8 @@ export class AppController {
     try {
       await this.appService.createTransaction(recordDto, eventType);
     } catch (error) {
+      if (error instanceof ConflictException || error instanceof InternalServerErrorException)
+        throw error;
       console.error(error);
       throw new InternalServerErrorException("Internal Server Error");
     }
@@ -80,6 +85,8 @@ export class AppController {
     try {
       await this.appService.amendSale(amendmentDto);
     } catch (error) {
+      if (error instanceof ConflictException || error instanceof InternalServerErrorException)
+        throw error;
       console.error(error);
       throw new InternalServerErrorException("Internal Server Error");
     }

@@ -48,7 +48,7 @@ export class AppService {
     const res = await this.dbService.readByDate(Object.values(this.EventTypes), date);
     if (!res.success) {
       console.error(res.error);
-      throw new InternalServerErrorException("Internal Server Error");
+      throw new InternalServerErrorException("Internal Server Error: Failed to get tax position");
     }
     let position = 0;
     if (res.records) {
