@@ -1,4 +1,4 @@
-### Get current tax position
+### Get Current Tax Position
 GET http://localhost:3000/tax-position?date=2026-08-03T12:30:00Z
 
 ### Create Tax Payment

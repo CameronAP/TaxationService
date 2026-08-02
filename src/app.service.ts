@@ -77,7 +77,6 @@ export class AppService {
           if (!itemFound) sale.items.push(amendment);
         }
         sale.items.forEach((item) => {
-          console.log()
           position += Math.round(item.cost * item.taxRate);
         }); // Rounded as per https://www.gov.uk/hmrc-internal-manuals/vat-trader-records/vatrec12030
       }
@@ -135,7 +134,6 @@ export class AppService {
   async amendSale(amendmentDto: AmendmentDto): Promise<void> {
     const salesET = this.EventTypes.sales;
     const { invoiceId, ...amendmentItem } = amendmentDto;
-    console.log(amendmentItem);
     const errStr = "Internal Server Error: Failed to amend transaction";
     const readRes = await this.dbService.readById(salesET, invoiceId);
     if (!readRes.success) {
