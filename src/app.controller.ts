@@ -8,6 +8,7 @@ import {
   HttpCode,
   Post,
   Body,
+  InternalServerErrorException,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { plainToInstance } from "class-transformer";
@@ -39,8 +40,13 @@ export class AppController {
     if (errors.length) {
       throw new BadRequestException(errors);
     }
-    const taxPos = await this.appService.getTaxPosition(new Date(dateString));
-    return { date: dateString, taxPosition: taxPos };
+    try {
+      const taxPos = await this.appService.getTaxPosition(new Date(dateString));
+      return { date: dateString, taxPosition: taxPos };
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException("Internal Server Error");
+    }
   }
 
   @Post("transactions")
@@ -56,7 +62,12 @@ export class AppController {
     if (errors.length) {
       throw new BadRequestException(errors);
     }
-    await this.appService.createTransaction(recordDto, eventType);
+    try {
+      await this.appService.createTransaction(recordDto, eventType);
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException("Internal Server Error");
+    }
   }
 
   @Patch("sale")
@@ -66,6 +77,11 @@ export class AppController {
     if (errors.length) {
       throw new BadRequestException(errors);
     }
-    await this.appService.amendSale(amendmentDto);
+    try {
+      await this.appService.amendSale(amendmentDto);
+    } catch (error) {
+      console.error(error);
+      throw new InternalServerErrorException("Internal Server Error");
+    }
   }
 }

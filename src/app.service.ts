@@ -5,11 +5,7 @@ import {
   InternalServerErrorException,
 } from "@nestjs/common";
 import { DataBaseService, DBRes } from "./services/database/database.service";
-import {
-  AmendmentDto,
-  SalesEventDto,
-  TaxPaymentDto,
-} from "./dto/requestFormat.dto";
+import { AmendmentDto, SalesEventDto, TaxPaymentDto } from "./dto/requestFormat.dto";
 import { ClassConstructor } from "class-transformer";
 
 interface saleItem {
@@ -39,7 +35,7 @@ type EventDto = SalesEventDto | TaxPaymentDto;
 
 @Injectable()
 export class AppService {
-  constructor(private readonly dbService: DataBaseService) { }
+  constructor(private readonly dbService: DataBaseService) {}
   EventTypes = {
     sales: "SALES",
     taxPayment: "TAX_PAYMENT",
@@ -49,10 +45,7 @@ export class AppService {
     [this.EventTypes.taxPayment]: TaxPaymentDto,
   };
   async getTaxPosition(date: Date): Promise<number> {
-    const res = await this.dbService.readByDate(
-      Object.values(this.EventTypes),
-      date,
-    );
+    const res = await this.dbService.readByDate(Object.values(this.EventTypes), date);
     if (!res.success) {
       console.error(res.error);
       throw new InternalServerErrorException("Internal Server Error");
@@ -80,21 +73,15 @@ export class AppService {
           position += Math.round(item.cost * item.taxRate);
         }); // Rounded as per https://www.gov.uk/hmrc-internal-manuals/vat-trader-records/vatrec12030
       }
-      for (const tp of res.records[
-        this.EventTypes.taxPayment
-      ] as Array<TaxPaymentRecord>) {
+      for (const tp of res.records[this.EventTypes.taxPayment] as Array<TaxPaymentRecord>) {
         position -= tp.amount;
       }
     }
     return position;
   }
 
-  async createTransaction(
-    record: SalesEventDto | TaxPaymentDto,
-    eventType: string,
-  ): Promise<void> {
-    const recordId =
-      record instanceof TaxPaymentDto ? record.date : record.invoiceId;
+  async createTransaction(record: SalesEventDto | TaxPaymentDto, eventType: string): Promise<void> {
+    const recordId = record instanceof TaxPaymentDto ? record.date : record.invoiceId;
     const errStr = "Internal Server Error: Failed to create transaction";
 
     let res: DBRes;
@@ -110,9 +97,7 @@ export class AppService {
       if (existantRecord) {
         if (existantRecord.items) {
           // Sale event has already be created and populated with items
-          throw new ConflictException(
-            `Record with ID: ${recordId} already exists`,
-          );
+          throw new ConflictException(`Record with ID: ${recordId} already exists`);
         }
         res = await this.dbService.update(eventType, recordId, {
           ...existantRecord,
@@ -123,9 +108,8 @@ export class AppService {
       }
     }
     if (!res.success) {
-      console.error(res.error?.message);
-      if (res.error?.code === HttpStatus.CONFLICT)
-        throw new ConflictException(res.error.message);
+      console.error(res.error);
+      if (res.error?.code === HttpStatus.CONFLICT) throw new ConflictException(res.error.message);
 
       throw new InternalServerErrorException(errStr);
     }

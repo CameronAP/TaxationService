@@ -36,10 +36,7 @@ export class DataBaseService {
     this.DATABASE_PATH = this.configService.get(DATABASE_ENV_VAR) as string;
   }
 
-  async readByDate(
-    eventTypes: Array<string>,
-    date: Date,
-  ): Promise<RecordsDBRes> {
+  async readByDate(eventTypes: Array<string>, date: Date): Promise<RecordsDBRes> {
     const res: RecordsDBRes = { success: true };
     try {
       await this.writeInProgressCheck();
@@ -100,9 +97,9 @@ export class DataBaseService {
       this.WRITE_IN_PROGRESS = true;
       const db = JSON.parse(await readFile(this.DATABASE_PATH, "utf8"));
       if (db[eventType][recordId]) {
-        const error = new Error(
-          `Conflict: Record with ID: ${recordId} already exists`,
-        ) as Error & { code: number };
+        const error = new Error(`Conflict: Record with ID: ${recordId} already exists`) as Error & {
+          code: number;
+        };
         error.code = 409;
         throw error;
       }

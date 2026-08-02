@@ -19,10 +19,7 @@ describe("AppController", () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [
-        AppService,
-        { provide: DataBaseService, useClass: MockDataBaseService },
-      ],
+      providers: [AppService, { provide: DataBaseService, useClass: MockDataBaseService }],
     }).compile();
 
     appController = module.get(AppController);
@@ -133,9 +130,7 @@ describe("AppController", () => {
               ],
             },
           ],
-          [appService.EventTypes.taxPayment]: [
-            { date: "2026-08-03T12:30:00Z", amount: 1000 },
-          ],
+          [appService.EventTypes.taxPayment]: [{ date: "2026-08-03T12:30:00Z", amount: 1000 }],
         },
       });
       const res = await appController.getTaxPosition({
@@ -162,9 +157,7 @@ describe("AppController", () => {
               ],
             },
           ],
-          [appService.EventTypes.taxPayment]: [
-            { date: "2026-08-03T12:30:00Z", amount: 100 },
-          ],
+          [appService.EventTypes.taxPayment]: [{ date: "2026-08-03T12:30:00Z", amount: 100 }],
         },
       });
       const res = await appController.getTaxPosition({
@@ -225,16 +218,12 @@ describe("AppController", () => {
           invoiceId: "Invoice 1",
           items: [{ itemId: "Item 1", cost: 1099, taxRate: 0.2 }],
         });
-        expect(mockDataBaseService.create).toHaveBeenCalledWith(
-          "SALES",
-          "Invoice 1",
-          {
-            date: "2026-08-03T12:30:00Z",
-            eventType: "SALES",
-            invoiceId: "Invoice 1",
-            items: [{ cost: 1099, itemId: "Item 1", taxRate: 0.2 }],
-          },
-        );
+        expect(mockDataBaseService.create).toHaveBeenCalledWith("SALES", "Invoice 1", {
+          date: "2026-08-03T12:30:00Z",
+          eventType: "SALES",
+          invoiceId: "Invoice 1",
+          items: [{ cost: 1099, itemId: "Item 1", taxRate: 0.2 }],
+        });
       });
       it("Should update sale event created by an amendment for an item the sale event doent have", async () => {
         mockDataBaseService.readById.mockResolvedValue({
@@ -259,24 +248,20 @@ describe("AppController", () => {
           invoiceId: "Invoice 1",
           items: [{ itemId: "Item 1", cost: 1099, taxRate: 0.2 }],
         });
-        expect(mockDataBaseService.update).toHaveBeenCalledWith(
-          "SALES",
-          "Invoice 1",
-          {
-            date: "2026-08-03T12:30:00Z",
-            eventType: "SALES",
-            invoiceId: "Invoice 1",
-            items: [{ cost: 1099, itemId: "Item 1", taxRate: 0.2 }],
-            amendments: [
-              {
-                date: "2026-08-03T12:31:00Z",
-                itemId: "Item 3",
-                cost: 40000,
-                taxRate: 0.15,
-              },
-            ],
-          },
-        );
+        expect(mockDataBaseService.update).toHaveBeenCalledWith("SALES", "Invoice 1", {
+          date: "2026-08-03T12:30:00Z",
+          eventType: "SALES",
+          invoiceId: "Invoice 1",
+          items: [{ cost: 1099, itemId: "Item 1", taxRate: 0.2 }],
+          amendments: [
+            {
+              date: "2026-08-03T12:31:00Z",
+              itemId: "Item 3",
+              cost: 40000,
+              taxRate: 0.15,
+            },
+          ],
+        });
       });
       it("Should raise Conflict error when a sale event created a sale event is found", async () => {
         mockDataBaseService.readById.mockResolvedValue({
@@ -306,16 +291,12 @@ describe("AppController", () => {
           invoiceId: "Invoice 1",
           items: [{ itemId: "Item 1", cost: 1099, taxRate: 0.2 }],
         });
-        expect(mockDataBaseService.create).toHaveBeenCalledWith(
-          "SALES",
-          "Invoice 1",
-          {
-            date: "2026-08-03T12:30:00Z",
-            eventType: "SALES",
-            invoiceId: "Invoice 1",
-            items: [{ cost: 1099, itemId: "Item 1", taxRate: 0.2 }],
-          },
-        );
+        expect(mockDataBaseService.create).toHaveBeenCalledWith("SALES", "Invoice 1", {
+          date: "2026-08-03T12:30:00Z",
+          eventType: "SALES",
+          invoiceId: "Invoice 1",
+          items: [{ cost: 1099, itemId: "Item 1", taxRate: 0.2 }],
+        });
       });
       it("Should raise a BadRequestError if the body is in incorrect format", async () => {
         await expect(
@@ -348,24 +329,20 @@ describe("AppController", () => {
         cost: 40000,
         taxRate: 0.15,
       });
-      expect(mockDataBaseService.update).toHaveBeenCalledWith(
-        "SALES",
-        "Invoice 1",
-        {
-          amendments: [
-            {
-              cost: 40000,
-              date: "2026-08-03T17:29:39Z",
-              itemId: "Item 1",
-              taxRate: 0.15,
-            },
-          ],
-          date: "2026-08-03T12:30:00Z",
-          eventType: "SALES",
-          invoiceId: "Invoice 1",
-          items: [{ cost: 1099, itemId: "Item 1", taxRate: 0.2 }],
-        },
-      );
+      expect(mockDataBaseService.update).toHaveBeenCalledWith("SALES", "Invoice 1", {
+        amendments: [
+          {
+            cost: 40000,
+            date: "2026-08-03T17:29:39Z",
+            itemId: "Item 1",
+            taxRate: 0.15,
+          },
+        ],
+        date: "2026-08-03T12:30:00Z",
+        eventType: "SALES",
+        invoiceId: "Invoice 1",
+        items: [{ cost: 1099, itemId: "Item 1", taxRate: 0.2 }],
+      });
     });
     it("Should update existing with amendments for a given date", async () => {
       mockDataBaseService.readById.mockResolvedValue({ success: true });
@@ -377,22 +354,18 @@ describe("AppController", () => {
         cost: 40000,
         taxRate: 0.15,
       });
-      expect(mockDataBaseService.create).toHaveBeenCalledWith(
-        "SALES",
-        "Invoice 1",
-        {
-          amendments: [
-            {
-              cost: 40000,
-              date: "2026-08-03T17:29:39Z",
-              itemId: "Item 1",
-              taxRate: 0.15,
-            },
-          ],
-          eventType: "SALES",
-          invoiceId: "Invoice 1",
-        },
-      );
+      expect(mockDataBaseService.create).toHaveBeenCalledWith("SALES", "Invoice 1", {
+        amendments: [
+          {
+            cost: 40000,
+            date: "2026-08-03T17:29:39Z",
+            itemId: "Item 1",
+            taxRate: 0.15,
+          },
+        ],
+        eventType: "SALES",
+        invoiceId: "Invoice 1",
+      });
     });
     it("Should raise a BadRequestError if the body is in incorrect format", async () => {
       await expect(
