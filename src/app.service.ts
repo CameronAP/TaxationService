@@ -86,7 +86,6 @@ export class AppService {
         console.error(readRes.error)
         throw new InternalServerErrorException(errStr)
       }
-      console.log(readRes.record)
       if (readRes.record) {
         if (readRes.record.items) {
           // Sale event has already be created and populated with items

@@ -73,7 +73,6 @@ export class DataBaseService {
             await this.writeInProgressCheck()
             this.WRITE_IN_PROGRESS = true
             const db = JSON.parse(await readFile(this.DATABASE_PATH, "utf8"));
-            console.log("HERE")
             if (db[eventType][recordId]) {
                 const error = new Error(`Conflict: Record with ID: ${recordId} already exists`) as Error & { code: number }
                 error.code = 409
