@@ -175,15 +175,11 @@ describe("AppController", () => {
           date: "2026-08-03T12:30:00Z",
           amount: 1500,
         });
-        expect(mockDataBaseService.create).toHaveBeenCalledWith(
-          "TAX_PAYMENT",
-          "2026-08-03T12:30:00Z",
-          {
-            amount: 1500,
-            date: "2026-08-03T12:30:00Z",
-            eventType: "TAX_PAYMENT",
-          },
-        );
+        expect(mockDataBaseService.create).toHaveBeenCalledWith("TAX_PAYMENT", "2026-08-03T12:30:00Z", {
+          amount: 1500,
+          date: "2026-08-03T12:30:00Z",
+          eventType: "TAX_PAYMENT",
+        });
       });
       it("Should raise a ConflictException if a taxpayment for that date already exists ", async () => {
         mockDataBaseService.create.mockResolvedValue({

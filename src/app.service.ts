@@ -1,9 +1,4 @@
-import {
-  ConflictException,
-  HttpStatus,
-  Injectable,
-  InternalServerErrorException,
-} from "@nestjs/common";
+import { ConflictException, HttpStatus, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { DataBaseService, DBRes } from "./services/database/database.service";
 import { AmendmentDto, SalesEventDto, TaxPaymentDto } from "./dto/requestFormat.dto";
 import { ClassConstructor } from "class-transformer";

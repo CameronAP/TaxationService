@@ -45,9 +45,7 @@ export class DataBaseService {
       for (const eventType of Object.values(eventTypes)) {
         const etRecords = db[eventType];
         if (Object.keys(etRecords)) {
-          const entries = Object.values(etRecords as [any]).filter(
-            (entry) => new Date(entry.date) <= date,
-          );
+          const entries = Object.values(etRecords as [any]).filter((entry) => new Date(entry.date) <= date);
           records[eventType] = entries;
         }
       }
